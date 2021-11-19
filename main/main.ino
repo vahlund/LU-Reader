@@ -9,28 +9,24 @@ MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
 
 MFRC522::MIFARE_Key key;
 
-void cardScanned();
-void buttonPressed();
-void buttonPressedISR();
-
 const int buzzer = 5;  //buzzer to arduino pin
 const int buttons = 2; //Keypad pin
 
-int lastButtonState = LOW;
 unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
 unsigned long debounceDelay = 50;
 
 volatile int numButtonPresses = 0;
 bool awaitsPin = false;
 
-const int lightbarPin = 6;     // On Trinket or Gemma, suggest changing this to 1
-const int numLightbarPins = 3; // Popular NeoPixel ring size
+const int lightbarPin = 6; //Status LED pin
+const int numLightbarPins = 3; //Status LED bar count
 
 Adafruit_NeoPixel pixels(numLightbarPins, lightbarPin, NEO_RGB + NEO_KHZ800);
-bool blinkYellow = false;
-int blinkItr = 0;
 
-volatile bool buttonSTATE = false;
+bool blinkYellow = false; //State variable for flashing yellow
+int blinkItr = 0; //Counter for number of flashes
+
+volatile bool buttonSTATE = false; //State if any keypad button is pressed
 
 /**
    Initialize.
