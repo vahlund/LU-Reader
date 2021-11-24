@@ -1,3 +1,4 @@
+#include "ReaderActions.h""
 #include <Adafruit_NeoPixel.h>
 #include <MFRC522.h>
 #include <SPI.h>
@@ -18,13 +19,14 @@ unsigned long debounceDelay = 50;
 volatile int numButtonPresses = 0;
 bool awaitsPin = false;
 
-const int lightbarPin = 6; //Status LED pin
+const int lightbarPin = 6;     //Status LED pin
 const int numLightbarPins = 3; //Status LED bar count
 
-Adafruit_NeoPixel pixels(numLightbarPins, lightbarPin, NEO_RGB + NEO_KHZ800);
+Adafruit_NeoPixel* pixels = new Adafruit_NeoPixel(numLightbarPins, lightbarPin, NEO_RGB + NEO_KHZ800);
+ReaderActions* actions = new ReaderActions(pixels);
 
 bool blinkYellow = false; //State variable for flashing yellow
-int blinkItr = 0; //Counter for number of flashes
+int blinkItr = 0;         //Counter for number of flashes
 
 volatile bool buttonSTATE = false; //State if any keypad button is pressed
 
@@ -49,9 +51,9 @@ void setup() {
 
     pinMode(buzzer, OUTPUT); // Set up buzzer pin
 
-    pixels.begin(); // INITIALIZE NeoPixel strip object
-    pixels.clear();
-    pixels.show();
+    pixels->begin(); // INITIALIZE NeoPixel strip object
+    pixels->clear();
+    pixels->show();
 
     Serial.println(F("End setup"));
 }
@@ -69,32 +71,25 @@ void loop() {
 
     if (numButtonPresses == 4) {
         //Call success/fail function here
-        pixels.fill(pixels.Color(0, 150, 0), 0, numLightbarPins);
-        pixels.show();
-        delay(1000);
-        pixels.clear();
-        pixels.show();
+        awaitsPin = false;
+        actions->cardApprovedAction();
         blinkItr = 0;
         blinkYellow = false;
-        awaitsPin = false;
+        numButtonPresses = 0;
     }
 
     if (blinkYellow) {
         if (blinkItr == 20) {
-            pixels.fill(pixels.Color(150, 0, 0), 0, numLightbarPins);
-            pixels.show();
-            delay(1000);
-            pixels.clear();
-            pixels.show();
+            actions->blink(pixels->Color(150, 0, 0));
             blinkItr = 0;
             blinkYellow = false;
             awaitsPin = false;
         } else if (blinkItr % 2 == 0) {
-            pixels.fill(pixels.Color(150, 150, 0), 0, numLightbarPins);
-            pixels.show();
+            pixels->fill(pixels->Color(150, 150, 0), 0, numLightbarPins);
+            pixels->show();
         } else {
-            pixels.clear();
-            pixels.show();
+            pixels->clear();
+            pixels->show();
         }
         delay(200);
         blinkItr++;
@@ -109,10 +104,11 @@ void loop() {
 //Resets button press count, beeps and starts to flash yellow.
 void cardScanned() {
     numButtonPresses = 0;
+    blinkItr = 0;
     awaitsPin = true;
     blinkYellow = true;
     buttonSTATE = false;
-    
+
     // 3820Hz for 125ms
     tone(buzzer, 3820);
     delay(125);
