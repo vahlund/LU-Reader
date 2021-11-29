@@ -7,6 +7,8 @@ class ReaderActions {
 
 private:
     Adafruit_NeoPixel* pixels;
+    Adafruit_NeoPixel* houseLight;
+    Adafruit_NeoPixel* topLight;
 
 public:
 
@@ -15,7 +17,7 @@ public:
      * 
      * @param pixels Card Reader light bar
      */
-    ReaderActions(Adafruit_NeoPixel* pixels);
+    ReaderActions(Adafruit_NeoPixel* pixels, Adafruit_NeoPixel* houseLight, Adafruit_NeoPixel* topLight);
 
     void cardApprovedAction();
 
@@ -27,6 +29,8 @@ public:
     void blink(uint32_t color);
 
     void loopColors();
+
+    void lightHouse(uint32_t color);
 };
 
 #endif // READERACTIONS_H
