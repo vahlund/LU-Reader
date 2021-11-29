@@ -1,9 +1,9 @@
-#include "ReaderActions.h""
+#include "ReaderActions.h"
 #include <Adafruit_NeoPixel.h>
 #include <MFRC522.h>
 #include <SPI.h>
 
-#define RST_PIN 9 // Configurable, see typical pin layout above
+#define RST_PIN 8 // Configurable, see typical pin layout above
 #define SS_PIN 10 // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
@@ -23,7 +23,9 @@ const int lightbarPin = 6;     //Status LED pin
 const int numLightbarPins = 3; //Status LED bar count
 
 Adafruit_NeoPixel* pixels = new Adafruit_NeoPixel(numLightbarPins, lightbarPin, NEO_RGB + NEO_KHZ800);
-ReaderActions* actions = new ReaderActions(pixels);
+Adafruit_NeoPixel* houseLight = new Adafruit_NeoPixel(34, 3, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel* topLight = new Adafruit_NeoPixel(18, 9, NEO_GRB + NEO_KHZ800);
+ReaderActions* actions = new ReaderActions(pixels, houseLight, topLight);
 
 bool blinkYellow = false; //State variable for flashing yellow
 int blinkItr = 0;         //Counter for number of flashes
@@ -54,6 +56,14 @@ void setup() {
     pixels->begin(); // INITIALIZE NeoPixel strip object
     pixels->clear();
     pixels->show();
+
+    houseLight->begin(); // INITIALIZE NeoPixel strip object
+    houseLight->clear();
+    houseLight->show();
+
+    topLight->begin(); // INITIALIZE NeoPixel strip object
+    topLight->clear();
+    topLight->show();
 
     Serial.println(F("End setup"));
 }
