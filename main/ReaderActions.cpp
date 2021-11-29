@@ -50,19 +50,17 @@ void ReaderActions::loopColors() {
 }
 
 void ReaderActions::lightHouse(uint32_t color) {
-    for (uint16_t i = 0; i < houseLight->numPixels(); i++) {
-        houseLight->setPixelColor(i, color);
+    uint16_t hue = 0;
+    for (uint32_t i = 0; i < 65536 * 4; i += 40) {
+        houseLight->fill(houseLight->ColorHSV(hue, 255, 150), 0, houseLight->numPixels());
+        topLight->fill(topLight->ColorHSV(hue, 255, 150), 0, topLight->numPixels());
         houseLight->show();
-        delay(50);
-    };
-    topLight->fill(color,0,6);
-    topLight->show();
-    delay(1000);
-    topLight->fill(color, 0, topLight->numPixels());
-    topLight->show();
-    delay(4000);
+        topLight->show();
+        hue += 40;
+        //delay(10);
+    }
     houseLight->clear();
-    houseLight->show();
     topLight->clear();
+    houseLight->show();
     topLight->show();
 }
