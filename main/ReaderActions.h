@@ -10,6 +10,8 @@ private:
     Adafruit_NeoPixel* houseLight;
     Adafruit_NeoPixel* topLight;
 
+    unsigned long lastCardApproved = 0;
+
 public:
 
     /**

@@ -12,9 +12,15 @@ void ReaderActions::cardApprovedAction() {
     long rand = random(300);
     rand = rand / 100;
     Serial.print(rand);
+    if ((millis() - lastCardApproved) > 60000 || lastCardApproved == 0) {
+        rand = 1; // Set Red if first scan (within 60sec)
+    }
+    lastCardApproved = millis();
+    
     switch (rand) {
     case 0:
         blink(pixels->Color(0, 150, 0)); //Green
+        lightHouse(pixels->Color(170, 170, 100));
         break;
     case 1:
         blink(pixels->Color(150, 0, 0)); //Red
@@ -24,9 +30,10 @@ void ReaderActions::cardApprovedAction() {
         break;
     default:
         blink(pixels->Color(150, 0, 0)); //Red
+        
         break;
     }
-    lightHouse(pixels->Color(170, 170, 170));
+    
 }
 
 void ReaderActions::blink(uint32_t color) {
@@ -41,21 +48,43 @@ void ReaderActions::loopColors() {
     uint16_t hue = 0;
     for (uint32_t i = 0; i < 65536 * 2; i += 40) {
         pixels->fill(pixels->ColorHSV(hue, 255, 150), 0, pixels->numPixels());
+        houseLight->fill(houseLight->ColorHSV(hue, 255, 150), 0, houseLight->numPixels());
+        topLight->fill(topLight->ColorHSV(hue, 255, 150), 0, topLight->numPixels());
         pixels->show();
+        houseLight->show();
+        topLight->show();
         hue += 40;
         //delay(10);
     }
     pixels->clear();
+    houseLight->clear();
+    topLight->clear();
+    houseLight->show();
+    topLight->show();
     pixels->show();
+
 }
 
+
+
 void ReaderActions::lightHouse(uint32_t color) {
-    for (uint16_t i = 0; i < houseLight->numPixels(); i++) {
+    for (uint16_t i = 0; i < houseLight->numPixels(); i += 4) {
         houseLight->setPixelColor(i, color);
+        houseLight->setPixelColor(i + 1, color);
+        houseLight->setPixelColor(i + 2, color);
+        houseLight->setPixelColor(i + 3, color);
+        houseLight->setPixelColor(i + 4, color);
         houseLight->show();
-        delay(50);
+        delay(400);
     };
-    topLight->fill(color,0,6);
+    topLight->setPixelColor(0, color);
+    topLight->setPixelColor(2, color);
+    topLight->setPixelColor(4, color);
+    topLight->show();
+    delay(1000);
+    topLight->setPixelColor(1, color);
+    topLight->setPixelColor(3, color);
+    topLight->setPixelColor(5, color);
     topLight->show();
     delay(1000);
     topLight->fill(color, 0, topLight->numPixels());

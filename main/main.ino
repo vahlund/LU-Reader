@@ -14,7 +14,7 @@ const int buzzer = 5;  //buzzer to arduino pin
 const int buttons = 2; //Keypad pin
 
 unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
-unsigned long debounceDelay = 50;
+unsigned long debounceDelay = 75;
 
 volatile int numButtonPresses = 0;
 bool awaitsPin = false;
