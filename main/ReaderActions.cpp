@@ -51,7 +51,7 @@ void ReaderActions::loopColors() {
 
 void ReaderActions::lightHouse(uint32_t color) {
     uint16_t hue = 0;
-    for (uint32_t i = 0; i < 65536 * 4; i += 40) {
+    for (uint32_t i = 0; i < 65536 * 2; i += 40) {
         houseLight->fill(houseLight->ColorHSV(hue, 255, 150), 0, houseLight->numPixels());
         topLight->fill(topLight->ColorHSV(hue, 255, 150), 0, topLight->numPixels());
         houseLight->show();
