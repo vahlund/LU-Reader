@@ -123,7 +123,7 @@ void ReaderActions::spinLight(uint32_t color) {
         topLight->show();
         topLED--;
         if (topLED > 5) {
-            topLED = 0;
+            topLED = 5;
         }
         delay(100);
     };
