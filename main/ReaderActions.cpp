@@ -30,7 +30,7 @@ void ReaderActions::cardApprovedAction() {
         break;
     case 3:
         blink(pixels->Color(150, 150, 150)); //White
-        spinLight(pixels->Color(150, 0, 0));
+        spinLight(pixels->Color(150, 150, 150));
         break;
     default:
         blink(pixels->Color(150, 0, 0)); //Red
