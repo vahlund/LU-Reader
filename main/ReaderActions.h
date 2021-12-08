@@ -35,6 +35,8 @@ public:
     void lightHouse(uint32_t colorLED, uint32_t colorStrip);
 
     void spinLight(uint32_t color);
+
+    void christmasLights();
 };
 
 #endif // READERACTIONS_H

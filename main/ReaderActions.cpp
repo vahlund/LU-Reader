@@ -9,7 +9,7 @@ ReaderActions::ReaderActions(Adafruit_NeoPixel* pixels, Adafruit_NeoPixel* house
 }
 
 void ReaderActions::cardApprovedAction() {
-    long rand = random(400);
+    long rand = random(500);
     rand = rand / 100;
     Serial.print(rand);
     if ((millis() - lastCardApproved) > 60000 || lastCardApproved == 0) {
@@ -20,7 +20,7 @@ void ReaderActions::cardApprovedAction() {
     switch (rand) {
     case 0:
         blink(pixels->Color(0, 150, 0)); //Green
-        lightHouse(pixels->Color(120, 120, 120), pixels->Color(250, 250, 250));
+        lightHouse(pixels->Color(120, 120, 120), pixels->Color(200, 200, 200));
         break;
     case 1:
         blink(pixels->Color(150, 0, 0)); //Red
@@ -32,9 +32,12 @@ void ReaderActions::cardApprovedAction() {
         blink(pixels->Color(150, 150, 150)); //White
         spinLight(pixels->Color(150, 150, 150));
         break;
+    case 4:
+        christmasLights();
+        blink(pixels->Color(150, 0, 0)); //Red
+        break;
     default:
         blink(pixels->Color(150, 0, 0)); //Red
-
         break;
     }
 }
@@ -51,13 +54,13 @@ void ReaderActions::loopColors() {
     uint16_t hue = 0;
     for (uint32_t i = 0; i < 65536 * 2; i += 40) {
         pixels->fill(pixels->ColorHSV(hue, 255, 150), 0, pixels->numPixels());
-        houseLight->fill(houseLight->ColorHSV(hue, 255, 150), 0, houseLight->numPixels());
+        houseLight->fill(houseLight->ColorHSV(hue, 255, 120), 0, houseLight->numPixels());
         //topLight->fill(topLight->ColorHSV(hue, 255, 150), 0, topLight->numPixels());
         pixels->show();
         houseLight->show();
         //topLight->show();
         hue += 40;
-        //delay(10);
+        delay(1);
     }
     pixels->clear();
     houseLight->clear();
@@ -97,28 +100,11 @@ void ReaderActions::lightHouse(uint32_t colorLED, uint32_t colorStrip) {
     houseLight->show();
     topLight->clear();
     topLight->show();
-    
 }
 
 void ReaderActions::spinLight(uint32_t color) {
-    uint8_t topLED = 0;
+    uint8_t topLED = 5;
     for (uint16_t i = 0; i < houseLight->numPixels(); i++) {
-        houseLight->clear();
-        houseLight->setPixelColor(i, color);
-        houseLight->show();
-        topLight->clear();
-        topLight->setPixelColor(topLED, color);
-        topLight->show();
-        topLED++;
-        if (topLED > 5) {
-            topLED = 0;
-        }
-
-        delay(100);
-    };
-
-    topLED = 5;
-    for (uint16_t i = (houseLight->numPixels() - 1); i == 0; i--) {
         houseLight->clear();
         houseLight->setPixelColor(i, color);
         houseLight->show();
@@ -132,8 +118,63 @@ void ReaderActions::spinLight(uint32_t color) {
         delay(100);
     };
 
+    topLED = 0;
+    for (uint16_t i = (houseLight->numPixels() - 1); i > 0; i--) {
+        houseLight->clear();
+        houseLight->setPixelColor(i, color);
+        houseLight->show();
+        topLight->clear();
+        topLight->setPixelColor(topLED, color);
+        topLight->show();
+        topLED++;
+        if (topLED > 5) {
+            topLED = 0;
+        }
+        delay(100);
+    };
+
     topLight->clear();
     topLight->show();
     houseLight->clear();
     houseLight->show();
+}
+
+void ReaderActions::christmasLights() {
+    houseLight->clear();
+    topLight->clear();
+    pixels->clear();
+    houseLight->show();
+    for (int i = 0; i < 10; i++) {
+        
+        if (i %2 == 0) {
+            pixels->fill(pixels->Color(200, 0, 0), 0, pixels->numPixels());
+            houseLight->fill(houseLight->Color(0, 120, 0), 0, houseLight->numPixels());
+            topLight->setPixelColor(0, topLight->Color(200, 0, 0));
+            topLight->setPixelColor(1, topLight->Color(0, 200, 0));
+            topLight->setPixelColor(2, topLight->Color(200, 0, 0));
+            topLight->setPixelColor(3, topLight->Color(0, 200, 0));
+            topLight->setPixelColor(4, topLight->Color(200, 0, 0));
+            topLight->setPixelColor(5, topLight->Color(0, 200, 0));
+        } else {
+            pixels->fill(pixels->Color(0, 200, 0), 0, pixels->numPixels());
+            houseLight->fill(houseLight->Color(120, 0, 0), 0, houseLight->numPixels());
+            topLight->setPixelColor(0, topLight->Color(0, 200, 0));
+            topLight->setPixelColor(1, topLight->Color(200, 0, 0));
+            topLight->setPixelColor(2, topLight->Color(0, 200, 0));
+            topLight->setPixelColor(3, topLight->Color(200, 0, 0));
+            topLight->setPixelColor(4, topLight->Color(0, 200, 0));
+            topLight->setPixelColor(5, topLight->Color(200, 0, 0));
+        }
+        pixels->show();
+        houseLight->show();
+        topLight->show();
+        delay(500);
+    }
+    topLight->clear();
+    houseLight->clear();
+    pixels->clear();
+    pixels->show();
+    houseLight->show();
+    topLight->show();
+    delay(100);
 }
