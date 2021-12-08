@@ -20,7 +20,7 @@ void ReaderActions::cardApprovedAction() {
     switch (rand) {
     case 0:
         blink(pixels->Color(0, 150, 0)); //Green
-        lightHouse(pixels->Color(170, 170, 100));
+        lightHouse(pixels->Color(120, 120, 120), pixels->Color(250, 250, 250));
         break;
     case 1:
         blink(pixels->Color(150, 0, 0)); //Red
@@ -65,33 +65,35 @@ void ReaderActions::loopColors() {
 
 }
 
-
-
-void ReaderActions::lightHouse(uint32_t color) {
+void ReaderActions::lightHouse(uint32_t colorLED, uint32_t colorStrip) {
+    houseLight->clear();
     for (uint16_t i = 0; i < houseLight->numPixels(); i += 4) {
-        houseLight->setPixelColor(i, color);
-        houseLight->setPixelColor(i + 1, color);
-        houseLight->setPixelColor(i + 2, color);
-        houseLight->setPixelColor(i + 3, color);
-        houseLight->setPixelColor(i + 4, color);
+        houseLight->setPixelColor(i, colorStrip);
+        houseLight->setPixelColor(i + 1, colorStrip);
+        houseLight->setPixelColor(i + 2, colorStrip);
+        houseLight->setPixelColor(i + 3, colorStrip);
+        houseLight->setPixelColor(i + 4, colorStrip);
         houseLight->show();
         delay(400);
     };
-    topLight->setPixelColor(0, color);
-    topLight->setPixelColor(2, color);
-    topLight->setPixelColor(4, color);
+    topLight->clear();
+    topLight->show();
+    topLight->setPixelColor(0, colorLED);
+    topLight->setPixelColor(2, colorLED);
+    topLight->setPixelColor(4, colorLED);
     topLight->show();
     delay(1000);
-    topLight->setPixelColor(1, color);
-    topLight->setPixelColor(3, color);
-    topLight->setPixelColor(5, color);
+    topLight->setPixelColor(1, colorLED);
+    topLight->setPixelColor(3, colorLED);
+    topLight->setPixelColor(5, colorLED);
     topLight->show();
     delay(1000);
-    topLight->fill(color, 0, topLight->numPixels());
+    topLight->fill(colorStrip, 6, topLight->numPixels() - 6);
     topLight->show();
     delay(4000);
     houseLight->clear();
     houseLight->show();
     topLight->clear();
     topLight->show();
+    
 }

@@ -32,7 +32,9 @@ public:
 
     void loopColors();
 
-    void lightHouse(uint32_t color);
+    void lightHouse(uint32_t colorLED, uint32_t colorStrip);
+
+    void spinLight(uint32_t color);
 };
 
 #endif // READERACTIONS_H
