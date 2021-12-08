@@ -33,6 +33,8 @@ public:
     void loopColors();
 
     void lightHouse(uint32_t color);
+
+    void spinLight(uint32_t color);
 };
 
 #endif // READERACTIONS_H
